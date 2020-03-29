@@ -1,5 +1,5 @@
-var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
-var weekdays   = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+var weekdays   = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 var today  = new Date()
 var months = []
 
@@ -11,8 +11,21 @@ function generateCalendar (eventData) {
   })
 
   // Highlight today
-  $('#' + formattedDate(today)).removeClass('no-event').addClass('today')
-  addMonthMenu()
+  $('#' + formattedDate(today))/*.removeClass('no-event')*/.addClass('today')
+  // addMonthMenu()
+  var _click = function (elem) {
+    console.log(elem)
+    $('[data-month]').hide()
+    $('[data-month="' + elem.data('month') + '"]').show()
+    elem.addClass('active').siblings().removeClass('active')
+  }
+  var _month = (new Date()).getFullYear() + "-" + monthNames[(new Date()).getMonth()];
+  var currentMonth = $('[data-month=' + _month + ']')
+  if( currentMonth.length ) {
+    _click(currentMonth)
+  } else {
+    _click($('[data-month]').first())
+  }
 }
 
 function addMonthMenu() {
@@ -41,7 +54,12 @@ function addMonthMenu() {
 function appendEvent( event ) {
   var eventStartDate = new Date(event.startdate)
   var eventEndDate   = new Date(event.enddate)
-  var eventElement   = $('<div class="event"><a target="_blank" href="' + event.tickets + '">' + event.name + '</a></div>')
+  var eventElement;
+  if (event.tickets) {
+    eventElement   = $('<div class="event"><a title="Click aquí para más información" target="_blank" href="' + event.tickets + '">' + event.name + '</a></div>')
+  } else {
+    eventElement   = $('<div class="event"><span>' + event.name + '</span></div>')
+  }
 
   // Handle multi-days
   if ( eventEndDate.getDate() ) {
@@ -77,18 +95,77 @@ function generateAllTheMonths( eventData ) {
   var months = []
 
   eventData.forEach(function(event) {
-    if (event.startdate) dates.push(event.startdate)
-    if (event.enddate) dates.push(event.enddate)
+    if (event.startdate) dates.push(new Date(event.startdate))
+    if (event.enddate) dates.push(new Date(event.enddate))
   })
 
+  generateTableHeading(dates);
+
   dates.forEach(function (date) {
-    date = new Date(date)
     if(months.indexOf(date.getFullYear().toString() + date.getMonth()) < 0) {
       months.push(date.getFullYear().toString() + date.getMonth())
       generateMonthTable(date)
     } else {
     }
   })
+}
+
+function generateTableHeading(dates) {
+  var months = [];
+  var tableHeading = $('<div id="table-heading"></div>');
+  var nav = $('<nav></nav>');
+  var prev = $('<button class="change-month" id="previous-month" title="Mes anterior">&lsaquo;</button>');
+  var next = $('<button class="change-month" id="next-month" title="Mes siguiente" disabled>&rsaquo;</button>');
+
+  $('#calendar-goes-here').append(tableHeading);
+  
+  dates.forEach(function (date, i) {
+    var eventMonthName = monthNames[date.getMonth()]
+    var attr = date.getFullYear() + '-' + eventMonthName;
+    if(months.indexOf(attr) < 0) {
+      months.push(attr)
+      tableHeading.append('<h2 data-month="' + attr + '">' + eventMonthName + ' ' + date.getFullYear() + '</h2>');
+      if (i == dates.length - 2) {
+        prev.data("target", months.length - 1);
+        next.data("target", months.length - 1);
+      }
+    }
+  });
+
+  var handleNewTarget = function (target) {
+    var prevBtn = $('#previous-month');
+    var nextBtn = $('#next-month');
+    var prevTarget = target - 1;
+    var nextTarget = target + 1;
+
+    if (prevTarget < 0) {
+      prevBtn.attr('disabled', 'true');
+    } else {
+      prevBtn
+        .data('target', prevTarget)
+        .removeAttr('disabled');
+    }
+
+    if (nextTarget >= months.length) {
+      nextBtn.attr('disabled', 'true');
+    } else {
+      nextBtn
+        .data('target', nextTarget)
+        .removeAttr('disabled');
+    }
+  }
+
+  $(document).on('click', '.change-month', function(e) {
+    var target = $(this).data('target');
+    var attr = months[target];
+    $('[data-month]').hide()
+    $('[data-month="' + attr + '"]').show()
+    handleNewTarget(target);
+    e.preventDefault();
+  })
+
+  nav.append(prev).append(next);
+  tableHeading.append(nav);
 }
 
 function generateMonthTable( date ) {
@@ -102,7 +179,6 @@ function generateMonthTable( date ) {
   var weekDayNumber  = firstDay.getDay()
 
   $('#calendar-goes-here').append(monthTable)
-  monthTable.before('<h2 data-month="' + date.getFullYear() + '-' + eventMonthName + '">' + eventMonthName + ' ' + date.getFullYear() + '</h2>')
 
   // Add month calendar header
   monthTableBody.append('<tr class="header"></tr>')
@@ -122,7 +198,7 @@ function generateMonthTable( date ) {
     var thisDay = new Date(date.getFullYear(), date.getMonth(), (daynumber + 1))
     var id = formattedDate(thisDay)
     var pastClass = endOfToday > thisDay ? "past" : ""
-    getFirstAvailableRow(monthTableBody).append('<td class="no-event ' + pastClass + '" id=' + id + '><div class=day>'+ (daynumber + 1) +'</div></td>')
+    getFirstAvailableRow(monthTableBody).append('<td class="no-event ' + pastClass + '" id=' + id + '><div class=day><span>'+ (daynumber + 1) +'</span></div></td>')
   })
 
   // Add empty days from next month
