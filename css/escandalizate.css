@@ -138,8 +138,7 @@ a:hover,
 	border: none;
 	color: black;
 	display: block;
-	font-size: 1.2em;
-	line-height: 1.5em;
+	opacity: 1;
 }
 
 .past:not(.no-event), 
