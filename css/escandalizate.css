@@ -24,8 +24,16 @@ a {
 }
 
 a:hover,
-.event a:hover {
+.event a:hover,
+footer a {
 	color: #ff1800;
+}
+
+#descripcion {
+	font-size: 1.2em;
+	margin: 20px auto 0px auto;
+	max-width: 50%;
+	text-align: center;
 }
 
 #calendar-goes-here {
@@ -124,7 +132,8 @@ a:hover,
 }
 
 .event {
-	padding: 0 2px 10px 2px;
+	padding: 0 2px 10px 10px;
+	text-align: left;
 }
 
 .past:not(.no-event) .day > span,

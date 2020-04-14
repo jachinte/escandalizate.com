@@ -4,7 +4,7 @@ var today  = new Date()
 var months = []
 
 function generateCalendar (eventData) {
-  var eventData = eventData.sort(function(a, b) { return (new Date(a.startdate)) - (new Date(b.startdate)) })
+  var eventData = eventData.sort(function(a, b) { return (new Date(a.fecha)) - (new Date(b.fecha)) })
   generateAllTheMonths(eventData)
   eventData.forEach(function (event) {
     appendEvent(event)
@@ -14,7 +14,6 @@ function generateCalendar (eventData) {
   $('#' + formattedDate(today))/*.removeClass('no-event')*/.addClass('today')
   // addMonthMenu()
   var _click = function (elem) {
-    console.log(elem)
     $('[data-month]').hide()
     $('[data-month="' + elem.data('month') + '"]').show()
     elem.addClass('active').siblings().removeClass('active')
@@ -52,13 +51,13 @@ function addMonthMenu() {
 }
 
 function appendEvent( event ) {
-  var eventStartDate = new Date(event.startdate)
-  var eventEndDate   = new Date(event.enddate)
+  var eventStartDate = new Date(event.fecha)
+  var eventEndDate   = new Date(event.fechafin)
   var eventElement;
-  if (event.tickets) {
-    eventElement   = $('<div class="event"><a title="Click aquí para más información" target="_blank" href="' + event.tickets + '">' + event.name + '</a></div>')
+  if (event.enlace) {
+    eventElement   = $('<div class="event"><a title="Click aquí para más información" target="_blank" href="' + event.enlace + '">' + event.texto + '</a></div>')
   } else {
-    eventElement   = $('<div class="event"><span>' + event.name + '</span></div>')
+    eventElement   = $('<div class="event"><span>' + event.texto + '</span></div>')
   }
 
   // Handle multi-days
@@ -83,7 +82,7 @@ function appendEvent( event ) {
         dateElement.append('<div class="event spacer">&nbsp;</div>')
       })
 
-      dateElement.removeClass('no-event').append('<div class="event multi-days following-days" title="' + event.name + '"><a target="_blank" href="' + event.tickets + '">' + event.name + '</a></div>')
+      dateElement.removeClass('no-event').append('<div class="event multi-days following-days" title="' + event.texto + '"><a target="_blank" href="' + event.enlace + '">' + event.texto + '</a></div>')
     }
   }
 
@@ -95,8 +94,8 @@ function generateAllTheMonths( eventData ) {
   var months = []
 
   eventData.forEach(function(event) {
-    if (event.startdate) dates.push(new Date(event.startdate))
-    if (event.enddate) dates.push(new Date(event.enddate))
+    if (event.fecha) dates.push(new Date(event.fecha))
+    if (event.fechafin) dates.push(new Date(event.fechafin))
   })
 
   generateTableHeading(dates);
@@ -125,10 +124,13 @@ function generateTableHeading(dates) {
     if(months.indexOf(attr) < 0) {
       months.push(attr)
       tableHeading.append('<h2 data-month="' + attr + '">' + eventMonthName + ' ' + date.getFullYear() + '</h2>');
-      if (i == dates.length - 2) {
-        prev.data("target", months.length - 1);
-        next.data("target", months.length - 1);
-      }
+    }
+  });
+
+  months.forEach(function (date, i) {
+    if (i == months.length - 1) {
+      prev.data("target", months.length - 2);
+      next.data("target", months.length - 2);
     }
   });
 
