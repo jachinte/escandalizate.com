@@ -40,9 +40,13 @@ footer a {
 	padding: 25px;
 }
 
-@media (max-width: 640px)  {
+@media (max-width: 720px)  {
 	body {
 		margin: 0;
+	}
+
+	#descripcion {
+		max-width: 80%;
 	}
 
 	#calendar-goes-here {
