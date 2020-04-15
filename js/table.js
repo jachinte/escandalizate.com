@@ -111,6 +111,7 @@ function generateAllTheMonths( eventData ) {
 
 function generateTableHeading(dates) {
   var months = [];
+  var numbers = {};
   var tableHeading = $('<div id="table-heading"></div>');
   var nav = $('<nav></nav>');
   var prev = $('<button class="change-month" id="previous-month" title="Mes anterior">&lsaquo;</button>');
@@ -125,13 +126,23 @@ function generateTableHeading(dates) {
       months.push(attr)
       tableHeading.append('<h2 data-month="' + attr + '">' + eventMonthName + ' ' + date.getFullYear() + '</h2>');
     }
+    if (numbers[attr]) {
+      numbers[attr]++;
+    } else {
+      numbers[attr] = 1;
+    }
   });
 
-  months.forEach(function (date, i) {
+  months.forEach(function (month, i) {
     if (i == months.length - 1) {
       prev.data("target", months.length - 2);
       next.data("target", months.length - 2);
     }
+    // Update the number of events
+    var number = numbers[month]
+    $('h2[data-month=' + month + ']')
+      .append($('<span>|</span>'))
+      .append($('<span>' + number + '</span>'))
   });
 
   var handleNewTarget = function (target) {
