@@ -86,6 +86,7 @@ ul.share-buttons .sr-only{
 #calendar-goes-here {
 	padding: 0 35px;
 	max-width: 1800px;
+	margin: auto;
 }
 
 #calendar-goes-here > section {
