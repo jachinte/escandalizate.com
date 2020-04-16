@@ -114,6 +114,7 @@ footer a {
 .change-month:disabled {
 	border-color: #ccc;
 	color: #ccc;
+	cursor: default;
 }
 
 #previous-month {
