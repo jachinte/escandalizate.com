@@ -86,7 +86,6 @@ td {
   padding: 3px;
   min-height: 23px;
   margin-bottom: 1px;
-  max-width: 184px;
   overflow: hidden;
   text-overflow: ellipsis;
 }

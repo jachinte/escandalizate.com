@@ -124,7 +124,7 @@ function generateTableHeading(dates) {
     var attr = date.getFullYear() + '-' + eventMonthName;
     if(months.indexOf(attr) < 0) {
       months.push(attr)
-      tableHeading.append('<h2 data-month="' + attr + '">' + eventMonthName + ' ' + date.getFullYear() + '</h2>');
+      tableHeading.append('<h2 data-month="' + attr + '"><b>' + eventMonthName + '</b> ' + date.getFullYear() + '</h2>');
     }
     if (numbers[attr]) {
       numbers[attr]++;
