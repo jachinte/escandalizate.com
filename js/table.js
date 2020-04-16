@@ -9,7 +9,7 @@ function generateCalendar (eventData) {
   eventData.forEach(function (event) {
     appendEvent(event)
   })
-
+  
   // Highlight today
   $('#' + formattedDate(today))/*.removeClass('no-event')*/.addClass('today')
   // addMonthMenu()
@@ -99,6 +99,8 @@ function generateAllTheMonths( eventData ) {
   })
 
   generateTableHeading(dates);
+  // Add a section for the tables
+  $('#calendar-goes-here').append($('<section id="tables"></section>'));
 
   dates.forEach(function (date) {
     if(months.indexOf(date.getFullYear().toString() + date.getMonth()) < 0) {
@@ -117,7 +119,7 @@ function generateTableHeading(dates) {
   var prev = $('<button class="change-month" id="previous-month" title="Mes anterior">&lsaquo;</button>');
   var next = $('<button class="change-month" id="next-month" title="Mes siguiente" disabled>&rsaquo;</button>');
 
-  $('#calendar-goes-here').append(tableHeading);
+  $('#calendar-goes-here').prepend(tableHeading);
   
   dates.forEach(function (date, i) {
     var eventMonthName = monthNames[date.getMonth()]
@@ -191,7 +193,7 @@ function generateMonthTable( date ) {
   var numberOfDays   = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
   var weekDayNumber  = firstDay.getDay()
 
-  $('#calendar-goes-here').append(monthTable)
+  $('#calendar-goes-here section').append(monthTable)
 
   // Add month calendar header
   monthTableBody.append('<tr class="header"></tr>')
